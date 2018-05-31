@@ -1,27 +1,21 @@
 {
   "name": "pulumi-iopipe",
   "version": "0.1.0",
-  "description": "",
+  "description": "This pacakge provides IO| integration with Pulumi programs.",
   "main": "index.js",
-  "directories": {
-    "example": "example"
-  },
   "dependencies": {
     "@iopipe/iopipe": "^1.7.0",
     "@pulumi/pulumi": "latest"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lukehoban/pulumi-iopipe.git"
+    "url": "git+https://github.com/pulumi/pulumi-iopipe.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Pulumi",
+  "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/lukehoban/pulumi-iopipe/issues"
+    "url": "https://github.com/pulumie/pulumi-iopipe/issues"
   },
-  "homepage": "https://github.com/lukehoban/pulumi-iopipe#readme"
+  "homepage": "https://github.com/pulumi/pulumi-iopipe#readme"
 }
