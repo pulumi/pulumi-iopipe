@@ -1,10 +1,27 @@
 {
-    "name": "iopipe",
-    "main": "index.js",
-    "dependencies": {
-        "@iopipe/iopipe": "^1.7.0",
-        "@pulumi/aws": "latest",
-        "@pulumi/aws-serverless": "0.1.0-dev-1527089836-g7bb1dc3",
-        "@pulumi/pulumi": "latest"
-    }
+  "name": "pulumi-iopipe",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "@iopipe/iopipe": "^1.7.0",
+    "@pulumi/pulumi": "latest"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukehoban/pulumi-iopipe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukehoban/pulumi-iopipe/issues"
+  },
+  "homepage": "https://github.com/lukehoban/pulumi-iopipe#readme"
 }
