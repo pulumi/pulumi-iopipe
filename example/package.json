@@ -2,9 +2,9 @@
     "name": "iopipesample",
     "main": "index.js",
     "dependencies": {
-        "@iopipe/iopipe": "latest",
         "@pulumi/aws": "latest",
-        "@pulumi/aws-serverless": "0.1.0-dev-1527089836-g7bb1dc3",
+        "@pulumi/aws-serverless": "latest",
+        "@pulumi/iopipe": "./..",
         "@pulumi/pulumi": "latest"
     }
 }

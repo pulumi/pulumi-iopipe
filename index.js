@@ -18,22 +18,31 @@ const pulumi = require("@pulumi/pulumi");
 const config = new pulumi.Config("iopipe");
 const token = config.require("token")
 
-// Replace `pulumi.runtime.serializeFunctionAsync` with a wrapper which injects IO|Pipe around all serialized Pulumi
-// functions.
+// Replace `pulumi.runtime.serializeFunction` and `pulumi.runtime.computeCodePaths` with wrappers which injects IO|Pipe
+// around all serialized Pulumi functions.
 function install(pulumi) {
-    const origSerializeFunctionAsync = pulumi.runtime.serializeFunctionAsync;
-    pulumi.runtime.serializeFunctionAsync = async function(func, serialize) {
-        const str = await origSerializeFunctionAsync(func, serialize);
-        const lines = str.split("\n");
+    const origSerializeFunction = pulumi.runtime.serializeFunction;
+    pulumi.runtime.serializeFunction = async function(func, args) {
+        const serialized = await origSerializeFunction(func, args);        
         // NOTE: We have a dependency here on the structure of the generated function serialization.
+        const lines = serialized.text.split("\n");
         const match = /^exports\.(.*) = (.*);$/.exec(lines[0]);
         if (!match) {
             console.error("Failed to wrap Pulumi function with IO|.")
         } else {
             lines[0] = `exports.${match[1]} = require("@iopipe/iopipe")({token: "${token}"})(${match[2]});`;
         }
-        return lines.join("\n");
-    }
+        return {
+            ...serialized,
+            text: lines.join("\n"),
+        };
+    };
+    const originComputeCodePaths = pulumi.runtime.computeCodePaths;
+    pulumi.runtime.computeCodePaths = async function(extraIncludePaths, extraIncludePackages, extraExcludePackages){
+        // Make sure that `@iopipe/iopipe` is included in the uploaded package.
+        const newExtraIncludePackages = [...(extraIncludePackages || []), "@iopipe/iopipe"];
+        return originComputeCodePaths(extraIncludePaths, newExtraIncludePackages, extraExcludePackages);
+    };
 }
 
 // Attempt to install to the version of Pulumi we loaded

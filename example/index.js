@@ -3,7 +3,7 @@ const aws = require("@pulumi/aws");
 const serverless = require("@pulumi/aws-serverless");
 
 // Load the Pulumi IO| integration package
-require("../"); // require("pulumi-iopipe")
+require("@pulumi/iopipe")(pulumi);
 
 // Create a bucket and a function to log new object uploads
 const bucket = new aws.s3.Bucket("my-bucket");
