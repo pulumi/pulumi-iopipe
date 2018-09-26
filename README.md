@@ -1,6 +1,6 @@
 # Pulumi IO|Pipe integration
 
-This pacakge provides IO|Pipe integration with Pulumi programs.  When imported into a Pulumi program, any serverless
+This package provides IO|Pipe integration with Pulumi programs.  When imported into a Pulumi program, any serverless
 functions generated from JavaScript callbacks in the Pulumi program will automatically be wrapped with IO|.  
 
 ```javascript
