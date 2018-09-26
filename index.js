@@ -24,13 +24,11 @@ function install(pulumi) {
     const origSerializeFunction = pulumi.runtime.serializeFunction;
     pulumi.runtime.serializeFunction = async function(func, args) {
         const wrapper = () => {
-            return () => require("@iopipe/iopipe")({token})(func)
+            return () => require("@iopipe/iopipe")({token})(func);
         }
 
-        const serialized = await origSerializeFunction(wrapper, {...args, isFactoryFunction: true});        
-        return {
-            ...serialized
-        };
+        const serialized = await origSerializeFunction(wrapper, {...args, isFactoryFunction: true});
+        return serialized;
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
     pulumi.runtime.computeCodePaths = async function(extraIncludePaths, extraIncludePackages, extraExcludePackages){
