@@ -22,16 +22,12 @@ const token = config.require("token")
 // around all serialized Pulumi functions.
 function install(pulumi) {
     const origSerializeFunction = pulumi.runtime.serializeFunction;
-    pulumi.runtime.serializeFunction = async function(func, args) {
-        const wrapper = () => {
-            return () => require("@iopipe/iopipe")({token})(func);
-        }
-
-        const serialized = await origSerializeFunction(wrapper, {...args, isFactoryFunction: true});        
-        return serialized;
+    pulumi.runtime.serializeFunction = function (func, args) {
+        const wrapper = () => require("@iopipe/iopipe")({ token })(func);
+        return origSerializeFunction(wrapper, { ...args, isFactoryFunction: true });
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
-    pulumi.runtime.computeCodePaths = async function(extraIncludePaths, extraIncludePackages, extraExcludePackages){
+    pulumi.runtime.computeCodePaths = function (extraIncludePaths, extraIncludePackages, extraExcludePackages) {
         // Make sure that `@iopipe/iopipe` is included in the uploaded package.
         const newExtraIncludePackages = [...(extraIncludePackages || []), "@iopipe/iopipe"];
         return originComputeCodePaths(extraIncludePaths, newExtraIncludePackages, extraExcludePackages);
