@@ -27,7 +27,7 @@ function install(pulumi) {
             return () => require("@iopipe/iopipe")({token})(func)
         }
 
-        const serialized = await origSerializeFunction(wrapper, {...args, isFactoryFunction: true});        
+        const serialized = await origSerializeFunction(wrapper, {...args});        
         return {
             ...serialized
         };
