@@ -23,18 +23,13 @@ const token = config.require("token")
 function install(pulumi) {
     const origSerializeFunction = pulumi.runtime.serializeFunction;
     pulumi.runtime.serializeFunction = async function(func, args) {
-        const serialized = await origSerializeFunction(func, args);        
-        // NOTE: We have a dependency here on the structure of the generated function serialization.
-        const lines = serialized.text.split("\n");
-        const match = /^exports\.(.*) = (.*);$/.exec(lines[0]);
-        if (!match) {
-            console.error("Failed to wrap Pulumi function with IO|.")
-        } else {
-            lines[0] = `exports.${match[1]} = require("@iopipe/iopipe")({token: "${token}"})(${match[2]});`;
+        const wrapper = () => {
+            return () => require("@iopipe/iopipe")({token})(func)
         }
+
+        const serialized = await origSerializeFunction(wrapper, {...args, isFactoryFunction: true});        
         return {
-            ...serialized,
-            text: lines.join("\n"),
+            ...serialized
         };
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
