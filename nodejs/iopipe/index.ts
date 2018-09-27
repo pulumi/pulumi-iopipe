@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const pulumi = require("@pulumi/pulumi");
+import * as pulumi from "@pulumi/pulumi";
 
 // Require an `iopipe:token` to be provided by the end-user.
 const config = new pulumi.Config("iopipe");
-const token = config.require("token")
+const token = config.require("token");
 
 // Replace `pulumi.runtime.serializeFunction` and `pulumi.runtime.computeCodePaths` with wrappers which injects IO|Pipe
 // around all serialized Pulumi functions.
-function install(pulumi) {
-    const origSerializeFunction = pulumi.runtime.serializeFunction;
-    pulumi.runtime.serializeFunction = function (func, args) {
-        const wrapper = 
-            args.isFactoryFunction
+export function install(pul: typeof pulumi) {
+    const origSerializeFunction = pul.runtime.serializeFunction;
+    pul.runtime.serializeFunction = function (func, args) {
+        const wrapper =
+            args && args.isFactoryFunction
             ? () => require("@iopipe/iopipe")({ token })(func())
             : () => require("@iopipe/iopipe")({ token })(func);
         return origSerializeFunction(wrapper, { ...args, isFactoryFunction: true });
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
-    pulumi.runtime.computeCodePaths = function (extraIncludePaths, extraIncludePackages, extraExcludePackages) {
+    pul.runtime.computeCodePaths = function (extraIncludePaths, extraIncludePackages, extraExcludePackages) {
         // Make sure that `@iopipe/iopipe` is included in the uploaded package.
         const newExtraIncludePackages = [...(extraIncludePackages || []), "@iopipe/iopipe"];
         return originComputeCodePaths(extraIncludePaths, newExtraIncludePackages, extraExcludePackages);
@@ -39,6 +39,3 @@ function install(pulumi) {
 
 // Attempt to install to the version of Pulumi we loaded
 install(pulumi);
-
-module.exports = install;
-

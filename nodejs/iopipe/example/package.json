@@ -1,0 +1,12 @@
+{
+  "name": "iopipesample",
+  "main": "index.ts",
+  "dependencies": {
+    "@pulumi/aws": "latest",
+    "@pulumi/aws-serverless": "latest",
+    "@pulumi/pulumi": "latest"
+  },
+  "peerDependencies": {
+    "@pulumi/iopipe": "latest"
+  }
+}

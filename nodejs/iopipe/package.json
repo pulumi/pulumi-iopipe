@@ -1,0 +1,22 @@
+{
+  "name": "@pulumi/iopipe",
+  "version": "{VERSION}",
+  "description": "This pacakge provides IO|Pipe integration with Pulumi programs.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "pulumi",
+    "iopipe",
+    "pulumi-iopipe"
+  ],
+  "homepage": "https://github.com/pulumi/pulumi-iopipe#readme",
+  "repository": "https://github.com/pulumi/pulumi-iopipe.git",
+  "author": "Pulumi",
+  "bugs": {
+    "url": "https://github.com/pulumi/pulumi-iopipe/issues"
+  },
+  "dependencies": {
+    "@iopipe/iopipe": "^1.9.0",
+    "@pulumi/pulumi": "latest"
+  },
+  "devDependencies": {}
+}
