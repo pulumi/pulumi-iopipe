@@ -23,7 +23,10 @@ const token = config.require("token")
 function install(pulumi) {
     const origSerializeFunction = pulumi.runtime.serializeFunction;
     pulumi.runtime.serializeFunction = function (func, args) {
-        const wrapper = () => require("@iopipe/iopipe")({ token })(func);
+        const wrapper = 
+            args.isFactoryFunction
+            ? () => require("@iopipe/iopipe")({ token })(func())
+            : () => require("@iopipe/iopipe")({ token })(func);
         return origSerializeFunction(wrapper, { ...args, isFactoryFunction: true });
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
