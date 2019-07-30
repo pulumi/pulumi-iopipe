@@ -35,7 +35,6 @@ function install(pulumi) {
     function (optionsOrExtraIncludePaths, extraIncludePackages, extraExcludePackages) {
         let options;
         if (Array.isArray(optionsOrExtraIncludePaths)) {
-            log.warn("'function computeCodePaths(string[])' is deprecated. Use the [computeCodePaths] overload that takes a [CodePathOptions] instead.");
             options = {
                 extraIncludePaths: optionsOrExtraIncludePaths,
                 extraIncludePackages,
