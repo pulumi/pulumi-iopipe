@@ -23,17 +23,34 @@ const token = config.require("token")
 function install(pulumi) {
     const origSerializeFunction = pulumi.runtime.serializeFunction;
     pulumi.runtime.serializeFunction = function (func, args) {
-        const wrapper = 
+        const wrapper =
             args.isFactoryFunction
             ? () => require("@iopipe/iopipe")({ token })(func())
             : () => require("@iopipe/iopipe")({ token })(func);
         return origSerializeFunction(wrapper, { ...args, isFactoryFunction: true });
     };
     const originComputeCodePaths = pulumi.runtime.computeCodePaths;
-    pulumi.runtime.computeCodePaths = function (extraIncludePaths, extraIncludePackages, extraExcludePackages) {
+
+    pulumi.runtime.computeCodePaths =
+    function (optionsOrExtraIncludePaths, extraIncludePackages, extraExcludePackages) {
+        let options;
+        if (Array.isArray(optionsOrExtraIncludePaths)) {
+            options = {
+                extraIncludePaths: optionsOrExtraIncludePaths,
+                extraIncludePackages,
+                extraExcludePackages,
+            };
+        }
+        else
+        {
+            options = optionsOrExtraIncludePaths || {};
+        }
+
         // Make sure that `@iopipe/iopipe` is included in the uploaded package.
-        const newExtraIncludePackages = [...(extraIncludePackages || []), "@iopipe/iopipe"];
-        return originComputeCodePaths(extraIncludePaths, newExtraIncludePackages, extraExcludePackages);
+        options.extraIncludePackages = options.extraIncludePackages || [];
+        options.extraIncludePackages.push("@iopipe/iopipe");
+
+        return originComputeCodePaths(options);
     };
 }
 
